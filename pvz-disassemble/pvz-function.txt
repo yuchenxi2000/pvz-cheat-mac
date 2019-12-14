@@ -1,0 +1,150 @@
+PvZ Mac v1.0.40 函数地址表
+
+尚未确定的函数：
+a835c  判断我是僵尸模式超线
+12192  在场地上放置植物/僵尸
+28e02  场地上生成物品
+22df6~2620f 鼠标响应函数
+
+0x12192 在场地上用卡
+
+用卡、种植植物：
+0x2a256 种植植物
+0x1c6f6 种植物时计算阳光是否足够，不够时红色闪烁提示
+0x1c6b4 判断卡片阳光是否足够，不够时设置卡片黑色
+
+0x22b40 灰烬炸僵尸判定
+
+11065c 图鉴
+
+中弹判定，hitbox：
+struct hitbox {
+    int x, y;
+    int dx, dy;
+};
+void hitbox_copy_edc1a(hitbox* to, hitbox* from); // 把from的内容拷贝到to
+
+void hitbox_copy_2252(hitbox* box, int x, int y, int dx, int dy); // 构造box
+
+hitbox* get_plant_attack_hitbox_3dfd0(hitbox*, Plant*, bool); // bool参数：裂荚后面脑袋。根据植物ID来构造植物攻击hitbox，可改植物攻击距离。
+
+
+
+0x38e7a: 只出现了坚果、大蒜的ID，貌似和植物减血有关
+
+bool 34902(Plant*);
+
+bool db964(Zombie*, int plant_fight_type); 貌似为判定同一行僵尸、植物距离的
+
+void db894(hitbox*, Zombie*);
+
+bool d1306(Zombie*);
+
+游戏模式：
+bool is_bowing_mode_bba86(PvZ*); 返回当前游戏是否是保龄球模式
+bool is_game_mode_slot_machine_bb616(PvZ*);  当前游戏模式slot machine
+bool is_main_menu_ba7f0(PvZ*); 返回当前游戏是否在主界面
+
+植物攻击类型：
+int get_plant_fight_type_347ac(Plant*, bool); 灰烬，有攻击距离，子弹追踪，...
+
+遍历植物、僵尸、子弹、物品、场地物品：
+bool get_next_plant_18ef8(PvZ*, Plant**); get next plant
+
+bool get_next_zombie_19e9a(PvZ*, Zombie**); get next zombie，返回是否存在next zombie
+
+bool get_next_bullet_1c532(PvZ*, Bullet**);
+
+bool get_next_item_1c57c(PvZ*, Item**);
+
+bool get_next_griditem_1c786(PvZ*, Item**);
+
+游戏战斗循环：
+void game_loop_1d39e(PvZ*); 游戏战斗循环，依次遍历植物、僵尸、...
+void game_loop_1d39e(PvZ* pvz) {
+    Plant** plant;
+    while (get_next_plant_18ef8(pvz, plant) != 0) {
+        update_plant_42c6c(*plant);
+    }
+    
+    Zombie** zombie;
+    while (get_next_zombie_19e9a(pvz, zombie) != 0) {
+        update_zombie_ea3b0(*zombie);
+    }
+
+    Bullet** bullet;
+    while (get_next_bullet_1c532(pvz, bullet) != 0) {
+        update_bullet_106a76(*bullet);
+    }
+
+    Item** item;
+    while (get_next_item_1c57c(pvz, item) != 0) {
+        update_item_9feea(*item);
+    }
+
+    GridItem** griditem;
+    while (get_next_griditem_1c786(pvz, griditem) != 0) {
+        update_griditem_9352(*griditem);
+    }
+
+    sub_102ffe();
+    sub_cb276(); // 好像是更新鼠标信息
+
+    for (int slot = 0; slot < slotCnt; ++slot) {
+        update_slot_f82ba(Slot*);
+    }
+}
+
+更新场地上的植物、僵尸等：
+void update_plant_42c6c(Plant*);
+
+void update_zombie_ea3b0(Zombie*);
+
+void update_bullet_106a76(Bullet*);
+
+void update_item_9feea(Item*);
+
+void update_griditem_9352(GridItem*);
+
+void update_slot_f82ba(Slot*);
+
+植物战斗：
+void update_plant_42c6c(Plant*); 对场上植物，貌似仅在战斗界面做操作，先后调0x4287c（作出摇动、攻击），0x38e7a，0x3985e
+void plant_fight_4287c(Plant*); 植物做攻击，会射击的调0x416cc，窝瓜调0x4033c，三叶草调0x3d672
+0x38e7a: 貌似是眨眼动作
+
+植物射击：
+Plant* plant_shoot_416cc(Plant*); 会射击的植物每帧由plant_fight_4287c调用，switch每个ID，根据植物指针+0x90的值判断射击时调get_plant_target_zombie_3e67e得到瞄准的僵尸，然后调plant_shoot_zombie_40be0射击
+
+Zombie* get_plant_target_zombie_3e67e(Plant*, int plant_ypos, bool is_cannon); 0x40be0前调用，得到植物瞄准的僵尸。
+Zombie* get_plant_target_zombie_3e67e(Plant*, int plant_ypos, bool is_cannon) {
+    get_plant_attack_hitbox_3dfd0(); // 得到植物碰撞箱
+    Zombie** zombie, target_zombie;
+    while (get_next_zombie_19e9a(pvz, zombie) != 0) {
+        if (zombie判定是植物瞄准的僵尸) {
+            target_zombie = zombie;
+        }
+    }
+    return target_zombie;
+}
+
+void plant_shoot_zombie_40be0(Plant*, Zombie*, int plant_ypos, bool is_cannon); 第二个参数为植物瞄准的僵尸，不为空时进行射击。每次射击时调用，switch每个ID，设定植物射出的子弹（可改黄油投手），再调0x2ca3a在场地上添加子弹
+40a28 群伤攻击，由40be0在ID为曾哥、大喷、地刺、钢地刺时调用，可改全屏曾
+
+添加子弹：
+Bullet* put_bullet_2ca3a(PvZ*, int x, int y, int, int shadow_row, int bullet_type);
+
+保龄球模式植物滚动：
+void plant_roll_in_bowing_mode_3ea90(Plant*); 保龄球模式下植物滚动
+
+窝瓜攻击：
+void wogua_fight_4033c(Plant*); 窝瓜启动、弹起、攻击动作，由plant_fight_4287c调用。调用了0x3ff72、0x4022c
+bool wogua_should_jump_3ff72(Plant*); 窝瓜启动判定，遍历所有僵尸判定是否启动，启动时调0x215ee
+void wogua_hurt_zombie_4022c(Plant*); 窝瓜，遍历所有僵尸判定是否伤害僵尸，调用伤害僵尸函数sub_e6288
+
+三叶草吹僵尸：
+0x3d672: 三叶草转动，调0x3ceb6
+0x3ceb6: 暂不明，调0x3cdae（灰烬判定）
+0x3cdae: 三叶草，遍历所有僵尸判定是否吹飞僵尸
+
+

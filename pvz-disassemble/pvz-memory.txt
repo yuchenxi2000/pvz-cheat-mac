@@ -1,0 +1,141 @@
+PvZ Mac v1.0.40 memory address
+35EE64---base
+       |
+       |-7c0---current mode
+       |
+       |-7c4---current UI
+       |
+       |-800---dancer clock
+       |
+       |-780---main object
+             |
+             |-84---zombie offset
+             |
+             |-88---zombie max count
+             |
+             |-90---zombie index
+             |
+             |-94---zombie count
+             |
+             |-a0---plant offset (size 0x14c)
+             |    |
+             |    |-0---plant array的首地址
+             |    |
+             |    |-4---pointer to main object
+             |    |
+             |    |-8---xoffset
+             |    |
+             |    |-c---恒为80
+             |    |
+             |    |-10---恒为80
+             |    |
+             |    |-14---恒为80
+             |    |
+             |    |-1c---ypos
+             |    |
+             |    |-24---ID
+             |    |
+             |    |-28---xpos
+             |    |
+             |    |-3c---state1 // 食人花1，土豆16，仙人掌30，窝瓜7，玉米炮37/35
+             |    |
+             |    |-40---current HP
+             |    |
+             |    |-4c---max HP
+             |    |
+             |    |-50---can shoot
+             |    |
+             |    |-5c---prepare time // 食人花，土豆，玉米炮
+             |    |
+             |    |-60---swing time (shoot plant)
+             |    |
+             |    |-64---shoot interval
+             |    |
+             |    |-90---攻击动画循环（到特定值时作出攻击）
+             |    |
+             |    |-141---(bool)disappeared
+             |    |
+             |    |-142---(bool)crushed
+             |
+             |-a4---plant max count
+             |
+             |-ac---plant index
+             |
+             |-b0---plant count
+             |
+             |-bc---bullet offset
+             |
+             |-c0---bullet max count
+             |
+             |-c8---bullet index
+             |
+             |-cc---bullet count
+             |
+             |-d8---item offset (size 0xb4)
+             |    |
+             |    |-24---(float)xoffset
+             |    |
+             |    |-28---(float)yoffset
+             |    |
+             |    |-38---(bool)disappeared
+             |    |
+             |    |-50---(bool)collected
+             |
+             |-dc---item max count
+             |
+             |-e8---item count
+             |
+             |-f4---grid item offset (size 0xfc) ???
+             |
+             |-104---grid item max count ???
+             |
+             |-12c---mouse offset
+             |     |
+             |     |-8---cursor x
+             |     |
+             |     |-c---cursor y
+             |     |
+             |     |-18---cursor in window
+             |     |
+             |     |-24---selected card
+             |     |
+             |     |-28---selected plant
+             |     |
+             |     |-30---select type // 0: none, 1:card, 6: shovel, 8: cannon
+             |
+             |-138---slot offset (size 0x50)
+             |     |
+             |     |-24---slot count
+             |     |
+             |     |-34---card x
+             |     |
+             |     |-38---card y
+             |     |
+             |     |-4c---CD
+             |     |
+             |     |-50---total CD
+             |     |
+             |     |-54---slot num
+             |     |
+             |     |-58---yoffset
+             |     |
+             |     |-5c---ID
+             |     |
+             |     |-60---imitator ID
+             |
+             |-158---game paused
+             |
+             |-5540---current scene
+             |
+             |-5554---sun
+             |
+             |-5560---current game time
+             |
+             |-5570---current wave
+             |
+             |-5590---refresh countdown
+             |
+             |-5594---wave interval
+             |
+             |-5598---huge wave countdown
+             |
