@@ -22,9 +22,9 @@ struct hitbox {
     int x, y;
     int dx, dy;
 };
-void hitbox_copy_edc1a(hitbox* to, hitbox* from); // 把from的内容拷贝到to
+void hitbox_copy_construct_edc1a(hitbox* to, hitbox* from); // 把from的内容拷贝到to
 
-void hitbox_copy_2252(hitbox* box, int x, int y, int dx, int dy); // 构造box
+void hitbox_construct_2252(hitbox* box, int x, int y, int dx, int dy); // 构造box
 
 hitbox* get_plant_attack_hitbox_3dfd0(hitbox*, Plant*, bool); // bool参数：裂荚后面脑袋。根据植物ID来构造植物攻击hitbox，可改植物攻击距离。
 
@@ -148,3 +148,4 @@ void wogua_hurt_zombie_4022c(Plant*); 窝瓜，遍历所有僵尸判定是否伤
 0x3cdae: 三叶草，遍历所有僵尸判定是否吹飞僵尸
 
 
+acef0 我是僵尸模式游戏主循环

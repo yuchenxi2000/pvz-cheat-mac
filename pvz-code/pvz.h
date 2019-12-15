@@ -49,20 +49,20 @@ public:
     
 public:
     // 自由种植物
-    void plantFreely(bool on);
+    void PlantFreely(bool on);
     // 自由放僵尸（我是僵尸模式）
-    void putZombieFreely(bool on);
+    void PutZombieFreely(bool on);
     // 全屏窝瓜
-    void fullScreenWoGua(bool on);
+    void FullScreenWoGua(bool on);
     // 植物疯狂射子弹
-    void fastShoot(bool on);
-    void butterPult();
-    void kernelPult();
-    void kernelButterPult();
+    void FastShoot(bool on);
+    void ButterPult();
+    void KernelPult();
+    void KernelButterPult();
     // 所有植物无视僵尸位置攻击
-    void alwaysShoot();
+    void AlwaysShoot();
     // 全屏曾哥
-    void fullScreenZengGe(bool on);
+    void FullScreenZengGe(bool on);
     // 直接在场地上放子弹
     // Bullet* put_bullet_2ca3a(PvZ*, int x, int y, int, int shadow_row, int bullet_type);
     /*
@@ -106,19 +106,22 @@ public:
      8：飞得巨慢，打不到僵尸
      9：打不到僵尸
      */
-    void addBullet(const BulletBuilder & builder, int cnt);
+    void AddBullet(const BulletBuilder & builder, int cnt);
     // 植物射玉米炮
-    void cannonShooter(bool on);
+    void CannonShooter(bool on);
     // 无视阳光种植
-    void plantWithoutSun(bool on);
+    void PlantWithoutSun(bool on);
     // @origin
     void NoCoolDown(bool on);
     // @origin
     void PurplePlantAvailable(bool on);
     void ChomperSwallowEverything(bool on);
     void KelpPullEverything(bool on);
+    void FumeshroomOneLine(bool on);
+    void InfiniteLawnMower(bool on);
+    void IZombieNoDie(bool on);
 
-private:
+//private:
     template<typename T, typename... Args>
     T ReadMemory(Args... address);
     

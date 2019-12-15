@@ -6,21 +6,21 @@ PvZ::~PvZ() {
     memory.Detach();
 }
 // 自由种植物
-void PvZ::plantFreely(bool on) {
+void PvZ::PlantFreely(bool on) {
     if (on)
         WriteMemory<byte>(0x83, 0x2a38b+1); // 植物任意种植
     else
         WriteMemory<byte>(0x84, 0x2a38b+1); // 解除植物任意种植
 }
 // 自由放僵尸（我是僵尸模式）
-void PvZ::putZombieFreely(bool on) {
+void PvZ::PutZombieFreely(bool on) {
     if (on)
         WriteMemory<byte>(0x83, 0xac868+1); // 僵尸任意放置
     else
         WriteMemory<byte>(0x84, 0xac868+1); // 解除僵尸任意放置
 }
 // 全屏窝瓜
-void PvZ::fullScreenWoGua(bool on) {
+void PvZ::FullScreenWoGua(bool on) {
     if (on) {
         // 窝瓜启动范围全屏
         WriteMemory<byte, 6>({0x0f, 0x81, 0x26, 0x01, 0x00, 0x00}, 0x3fff0);
@@ -38,7 +38,7 @@ void PvZ::fullScreenWoGua(bool on) {
     }
 }
 // 植物疯狂射子弹
-void PvZ::fastShoot(bool on) {
+void PvZ::FastShoot(bool on) {
     if (on) {
         WriteMemory<byte>(0x80, 0x41970+1); // 植物狂暴
         WriteMemory<byte, 3>({0xeb, 0x36, 0x90}, 0x41895); // 机枪强化
@@ -47,21 +47,21 @@ void PvZ::fastShoot(bool on) {
         WriteMemory<byte, 3>({0x8b, 0x45, 0x08}, 0x41895); // 解除机枪强化
     }
 }
-void PvZ::butterPult() {
+void PvZ::ButterPult() {
     WriteMemory<byte>(0x70, 0x40d3a); // 黄油投手
 }
-void PvZ::kernelPult() {
+void PvZ::KernelPult() {
     WriteMemory<byte>(0x71, 0x40d3a); // 玉米粒投手
 }
-void PvZ::kernelButterPult() {
+void PvZ::KernelButterPult() {
     WriteMemory<byte>(0x75, 0x40d3a); // 正常玉米投手
 }
 // 所有植物无视僵尸位置攻击
-void PvZ::alwaysShoot() {
+void PvZ::AlwaysShoot() {
     WriteMemory<byte, 5>({0xe9, 0xb7, 0x03, 0x00, 0x00}, 0x3e6d2);
 }
 // 全屏曾哥
-void PvZ::fullScreenZengGe(bool on) {
+void PvZ::FullScreenZengGe(bool on) {
     if (on) {
         // 曾哥攻击范围全屏
         // 0x40aa4: jno 0x40b33
@@ -118,7 +118,7 @@ void PvZ::fullScreenZengGe(bool on) {
  8：飞得巨慢，打不到僵尸
  9：打不到僵尸
  */
-void PvZ::addBullet(const BulletBuilder & builder, int cnt) {
+void PvZ::AddBullet(const BulletBuilder & builder, int cnt) {
     code.asm_init_newThread();
     code.asm_mov_dword_ptr_esp_add(0x18, cnt);
     // loop:
@@ -162,7 +162,7 @@ void PvZ::addBullet(const BulletBuilder & builder, int cnt) {
     code.asm_create_thread();
 }
 // 植物射玉米炮
-void PvZ::cannonShooter(bool on) {
+void PvZ::CannonShooter(bool on) {
     code.asm_init_codeInject();
     // mov dword [ebp+28], 0xb
     code.asm_add_byte(0xc7);
@@ -172,7 +172,7 @@ void PvZ::cannonShooter(bool on) {
     code.asm_code_inject(on, 0x2ca43, 5);
 }
 // 无视阳光种植
-void PvZ::plantWithoutSun(bool on) {
+void PvZ::PlantWithoutSun(bool on) {
     if (on) {
         // 阳光不够时卡片依然可用
         WriteMemory<byte, 2>({0x90, 0x90}, 0x1c6da);
@@ -208,6 +208,7 @@ void PvZ::PurplePlantAvailable(bool on) {
         WriteMemory<byte>(0x74, 0x1F232);
     }
 }
+// 食人花吞巨人、僵王
 void PvZ::ChomperSwallowEverything(bool on) {
     if (on) {
         WriteMemory<byte>(0x0, 0x3f363);
@@ -215,11 +216,36 @@ void PvZ::ChomperSwallowEverything(bool on) {
         WriteMemory<byte>(0x1, 0x3f363);
     }
 }
+// 海草拉陆地僵尸
 void PvZ::KelpPullEverything(bool on) {
     if (on) {
         // 3e958: jo 3ea6e
         WriteMemory<byte>(0x80, 0x3e959);
     } else {
         WriteMemory<byte>(0x85, 0x3e959);
+    }
+}
+// 大喷菇一行（改攻击hitbox）
+void PvZ::FumeshroomOneLine(bool on) {
+    if (on) {
+        WriteMemory<int>(0x640, 0x3e3eb);
+    } else {
+        WriteMemory<int>(0x154, 0x3e3eb);
+    }
+}
+// 割草机不动
+void PvZ::InfiniteLawnMower(bool on) {
+    if (on) {
+        WriteMemory({0xe9, 0xb0, 0x00, 0x00, 0x00}, 0x8c03);
+    } else {
+        WriteMemory({0x83, 0xec, 0x28, 0x8b, 0x45}, 0x8c03);
+    }
+}
+// 我是僵尸模式阳光不足、没僵尸时不死
+void PvZ::IZombieNoDie(bool on) {
+    if (on) {
+        WriteMemory<byte>(0xeb, 0xad050);
+    } else {
+        WriteMemory<byte>(0x7f, 0xad050);
     }
 }
