@@ -58,7 +58,17 @@ void ZenggeFullScreenAttackHitbox() {
 }
 int main(int argc, const char * argv[]) {
     pvz.PlantWithoutSun(true);
+    pvz.PlantFreely(true);
+    pvz.PurplePlantAvailable(true);
+    pvz.NoCoolDown(true);
+    pvz.FullScreenZengGe(true);
+    pvz.FullScreenWoGua(true);
+    pvz.ChomperSwallowEverything(true);
+    pvz.FumeshroomOneLine(true);
+    pvz.KelpPullEverything(true);
+    pvz.ButterPult();
     pvz.PutZombieFreely(true);
+    pvz.InfiniteLawnMower(true);
     return 0;
     // 以下是测试
     // 舞王不转身

@@ -17,17 +17,6 @@ a835c  判断我是僵尸模式超线
 
 11065c 图鉴
 
-中弹判定，hitbox：
-struct hitbox {
-    int x, y;
-    int dx, dy;
-};
-void hitbox_copy_construct_edc1a(hitbox* to, hitbox* from); // 把from的内容拷贝到to
-
-void hitbox_construct_2252(hitbox* box, int x, int y, int dx, int dy); // 构造box
-
-hitbox* get_plant_attack_hitbox_3dfd0(hitbox*, Plant*, bool); // bool参数：裂荚后面脑袋。根据植物ID来构造植物攻击hitbox，可改植物攻击距离。
-
 
 
 0x38e7a: 只出现了坚果、大蒜的ID，貌似和植物减血有关
@@ -134,6 +123,17 @@ void plant_shoot_zombie_40be0(Plant*, Zombie*, int plant_ypos, bool is_cannon); 
 添加子弹：
 Bullet* put_bullet_2ca3a(PvZ*, int x, int y, int, int shadow_row, int bullet_type);
 
+中弹判定，hitbox：
+struct hitbox {
+    int x, y;
+    int dx, dy;
+};
+void hitbox_copy_construct_edc1a(hitbox* to, hitbox* from); // 把from的内容拷贝到to
+
+void hitbox_construct_2252(hitbox* box, int x, int y, int dx, int dy); // 构造box
+
+hitbox* get_plant_attack_hitbox_3dfd0(hitbox*, Plant*, bool); // bool参数：裂荚后面脑袋。根据植物ID来构造植物攻击hitbox，可改植物攻击距离。
+
 保龄球模式植物滚动：
 void plant_roll_in_bowing_mode_3ea90(Plant*); 保龄球模式下植物滚动
 
@@ -149,3 +149,6 @@ void wogua_hurt_zombie_4022c(Plant*); 窝瓜，遍历所有僵尸判定是否伤
 
 
 acef0 我是僵尸模式游戏主循环
+
+1968ea: 更新子弹位置
+
