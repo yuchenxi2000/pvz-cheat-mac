@@ -15,9 +15,6 @@ a835c  判断我是僵尸模式超线
 
 0x22b40 灰烬炸僵尸判定
 
-11065c 图鉴
-
-
 
 0x38e7a: 只出现了坚果、大蒜的ID，貌似和植物减血有关
 
@@ -28,6 +25,28 @@ bool db964(Zombie*, int plant_fight_type); 貌似为判定同一行僵尸、植�
 void db894(hitbox*, Zombie*);
 
 bool d1306(Zombie*);
+
+小推车：
+set_lawn_mower_atstart_10ED2() {
+    for (int i = 0; i <= 5; ++i) {
+        ... // 判断该游戏模式是否需要设置小推车
+        if (该游戏模式需要设置小推车) {
+            Mower* mower = alloc_lawn_mower_98a4(uint32_t mower_offset);
+            set_lawn_mower_858e(Mower* mower, int row);
+        }
+    }
+}
+
+remove_lawn_mower_925c(Mower*) {
+    ... // 移除超出场地的小推车
+    if (某条件) {
+        // 重置小推车
+        Mower* mower = alloc_lawn_mower_98a4(uint32_t mower_offset);
+        set_lawn_mower_858e(Mower* mower, int row);
+    }
+}
+
+activate_lawn_mower_8c00(Mower*);
 
 游戏模式：
 bool is_bowing_mode_bba86(PvZ*); 返回当前游戏是否是保龄球模式
@@ -49,7 +68,9 @@ bool get_next_item_1c57c(PvZ*, Item**);
 bool get_next_griditem_1c786(PvZ*, Item**);
 
 游戏战斗循环：
-void game_loop_1d39e(PvZ*); 游戏战斗循环，依次遍历植物、僵尸、...
+void game_loop_11065c(PvZ*); 图鉴界面的游戏循环
+void game_loop_izombie_acef0(PvZ*); 我是僵尸模式游戏主循环
+void game_loop_1d39e(PvZ*); 战斗界面（非我是僵尸模式）的游戏循环（GameUI==3），依次遍历植物、僵尸、...
 void game_loop_1d39e(PvZ* pvz) {
     Plant** plant;
     while (get_next_plant_18ef8(pvz, plant) != 0) {
@@ -148,7 +169,6 @@ void wogua_hurt_zombie_4022c(Plant*); 窝瓜，遍历所有僵尸判定是否伤
 0x3cdae: 三叶草，遍历所有僵尸判定是否吹飞僵尸
 
 
-acef0 我是僵尸模式游戏主循环
 
 1968ea: 更新子弹位置
 

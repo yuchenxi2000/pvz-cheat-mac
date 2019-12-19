@@ -118,8 +118,19 @@ public:
     void ChomperSwallowEverything(bool on);
     void KelpPullEverything(bool on);
     void FumeshroomOneLine(bool on);
-    void InfiniteLawnMower(bool on);
+    enum LawnMowerState {
+        NORMAL, INFIN, INFIN_CIRCULATION
+    };
+    void InfiniteLawnMower(LawnMowerState state);
     void IZombieNoDie(bool on);
+    void SetLawnMowerForAllLevel(bool on);
+    
+    // 标准开挂
+    void EasyCheat(bool on);
+    
+    // test
+    void WinterMelon();
+    void testZenggeFullScreenAttackHitbox();
 
 //private:
     template<typename T, typename... Args>
@@ -136,7 +147,7 @@ public:
     
     void WriteMemory(std::initializer_list<byte> il, uintptr_t address);
     
-    bool isGameOn(bool alert = true);
+//    bool isGameOn(bool alert = true);
     
     Memory memory;
     Code code;

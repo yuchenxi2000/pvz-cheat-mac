@@ -233,12 +233,29 @@ void PvZ::FumeshroomOneLine(bool on) {
         WriteMemory<int>(0x154, 0x3e3eb);
     }
 }
-// 割草机不动
-void PvZ::InfiniteLawnMower(bool on) {
-    if (on) {
-        WriteMemory({0xe9, 0xb0, 0x00, 0x00, 0x00}, 0x8c03);
-    } else {
-        WriteMemory({0x83, 0xec, 0x28, 0x8b, 0x45}, 0x8c03);
+// 无限割草机、循环割草机
+void PvZ::InfiniteLawnMower(LawnMowerState state) {
+    switch (state) {
+        case NORMAL:
+            WriteMemory<byte, 2>({0x74, 0x48}, 0x92b8);
+            WriteMemory<int>(0x1, 0x863e);
+            WriteMemory<int>(0x0, 0x92eb);
+            break;
+            
+        case INFIN:
+            WriteMemory<byte, 2>({0x90, 0x90}, 0x92b8);
+            WriteMemory<int>(0x1, 0x863e);
+            WriteMemory<int>(0x0, 0x92eb);
+            break;
+            
+        case INFIN_CIRCULATION:
+            WriteMemory<byte, 2>({0x90, 0x90}, 0x92b8);
+            WriteMemory<int>(0x2, 0x863e);
+            WriteMemory<int>(0x2, 0x92eb);
+            break;
+            
+        default:
+            break;
     }
 }
 // 我是僵尸模式阳光不足、没僵尸时不死
@@ -249,3 +266,68 @@ void PvZ::IZombieNoDie(bool on) {
         WriteMemory<byte>(0x7f, 0xad050);
     }
 }
+// 任何游戏模式均放小推车
+void PvZ::SetLawnMowerForAllLevel(bool on) {
+    if (on) {
+        WriteMemory<byte, 2>({0x90, 0x90}, 0x11086);
+    } else {
+        WriteMemory<byte, 2>({0x75, 0x2c}, 0x11086);
+    }
+}
+void PvZ::EasyCheat(bool on) {
+    PlantWithoutSun(on);
+    PlantFreely(on);
+    PurplePlantAvailable(on);
+    NoCoolDown(on);
+    FullScreenZengGe(on);
+    FullScreenWoGua(on);
+    ChomperSwallowEverything(on);
+    FumeshroomOneLine(on);
+    KelpPullEverything(on);
+    PutZombieFreely(on);
+    if (on) {
+        ButterPult();
+        InfiniteLawnMower(INFIN);
+    }else {
+        KernelButterPult();
+        InfiniteLawnMower(NORMAL);
+    }
+}
+// test
+void PvZ::WinterMelon() {
+    // 示例：每行放50个冰瓜
+    BulletBuilder builder;
+    builder.setSpeed(3, -0);
+    builder.bullet = 5;
+    builder.move_type = 7;
+    builder.hurt_type = 1;
+    builder.unknown = 0x50000;
+    for (int i = 1; i <= 6; ++i) {
+        builder.setPosition(Coord(i, 1));
+        AddBullet(builder, 50);
+    }
+}
+// test
+// 曾哥攻击碰撞箱全屏
+// 修改碰撞箱并不能实现全屏。曾哥只攻击3行内所有僵尸。
+// 因为get target zombie，循环获取瞄准僵尸时曾哥有一个是否在3行以内的判断。
+void PvZ::testZenggeFullScreenAttackHitbox() {
+    // 3e42c~3e47b+5
+    // 3e4e8~3e52d
+    std::array<byte, 69> fullscreen = ReadMemory<byte, 69>(0x3e4e8);
+    std::array<byte, 84> gloomshroom;
+    gloomshroom.fill(0x90);
+    memcpy(gloomshroom.data(), fullscreen.data(), fullscreen.size());
+    // 修改jmp
+    char jmp[5] = {static_cast<char>(0xe9), 0x00, 0x00, 0x00, 0x00};
+    int jmp_offset = 0x3e57d-0x3e42c-fullscreen.size()-5;
+    int* offset = (int*)&jmp[1];
+    *offset = jmp_offset;
+    memcpy(gloomshroom.data()+fullscreen.size(), jmp, sizeof(jmp));
+    // 修正call的offset
+    int* call_offset = (int*)(gloomshroom.data()+39);
+    *call_offset += 0x3e4e8-0x3e42c;
+    WriteMemory(gloomshroom, 0x3e42c);
+}
+// 舞王不转身
+//    pvz.WriteMemory({0x90, 0x90, 0x90}, 0xea4fc);
