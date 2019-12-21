@@ -56,15 +56,18 @@ public:
     void FullScreenWoGua(bool on);
     // 植物疯狂射子弹
     void FastShoot(bool on);
+    // 欧皇投手
     void ButterPult();
+    // 非酋投手
     void KernelPult();
+    // 正常玉米投手
     void KernelButterPult();
     // 所有植物无视僵尸位置攻击
     void AlwaysShoot();
     // 全屏曾哥
     void FullScreenZengGe(bool on);
     // 直接在场地上放子弹
-    // Bullet* put_bullet_2ca3a(PvZ*, int x, int y, int, int shadow_row, int bullet_type);
+    // Bullet* put_bullet_2ca3a(PvZ*, int x, int y, int, int row, int bullet_type);
     /*
      bullet 类型取值
      0: 豌豆
@@ -80,8 +83,7 @@ public:
      a: 玉米粒
      b: 玉米炮
      c: 黄油
-     d: 豌豆
-     以后就崩溃了
+     d: 豌豆（植物僵尸）
      */
     /*
      hurt_type
@@ -115,15 +117,27 @@ public:
     void NoCoolDown(bool on);
     // @origin
     void PurplePlantAvailable(bool on);
+    // 食人花吞巨人、僵王
     void ChomperSwallowEverything(bool on);
+    // 海草拉陆地僵尸
     void KelpPullEverything(bool on);
+    // 大喷菇一行（改攻击hitbox）
     void FumeshroomOneLine(bool on);
     enum LawnMowerState {
-        NORMAL, INFIN, INFIN_CIRCULATION
+        NORMAL, INFIN, CIRCULATION
     };
+    // 无限割草机、循环割草机
     void InfiniteLawnMower(LawnMowerState state);
+    // 我是僵尸模式阳光不足、没僵尸时不死
     void IZombieNoDie(bool on);
+    // 任何游戏模式均放小推车
     void SetLawnMowerForAllLevel(bool on);
+    // 全屏辣椒
+    void FullScreenJalapeno(bool on);
+    // 所有植物变成辣椒并瞬间爆炸
+    void AllPlantsExplode();
+    // 所有植物变成核菇并瞬间爆炸
+    void AllPlantsExplode2();
     
     // 标准开挂
     void EasyCheat(bool on);

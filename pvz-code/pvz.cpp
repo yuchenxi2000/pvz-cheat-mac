@@ -248,7 +248,7 @@ void PvZ::InfiniteLawnMower(LawnMowerState state) {
             WriteMemory<int>(0x0, 0x92eb);
             break;
             
-        case INFIN_CIRCULATION:
+        case CIRCULATION:
             WriteMemory<byte, 2>({0x90, 0x90}, 0x92b8);
             WriteMemory<int>(0x2, 0x863e);
             WriteMemory<int>(0x2, 0x92eb);
@@ -274,6 +274,35 @@ void PvZ::SetLawnMowerForAllLevel(bool on) {
         WriteMemory<byte, 2>({0x75, 0x2c}, 0x11086);
     }
 }
+void PvZ::FullScreenJalapeno(bool on) {
+    if (on) {
+        WriteMemory<byte, 2>({0xeb, 0x3cd11-0x3cce9-2}, 0x3cce9);
+    }else {
+        WriteMemory<byte, 2>({0x75, 0x07}, 0x3cce9);
+    }
+}
+void PvZ::AllPlantsExplode() {
+    uint32_t plant_array = ReadMemory<uint32_t>(base, 0x780, 0xa0);
+    int plant_max_cnt = ReadMemory<uint32_t>(base, 0x780, 0xa4);
+    for (int i = 0; i < plant_max_cnt; ++i) {
+        uint32_t plant_ptr = plant_array + i * 0x14c;
+        WriteMemory<int>(0x1, plant_ptr + 0x50);
+        // wake up mushroom
+        WriteMemory<byte>(0x0, plant_ptr+0x143);
+        WriteMemory<int>(0x14, plant_ptr + 0x24);
+    }
+}
+void PvZ::AllPlantsExplode2() {
+    uint32_t plant_array = ReadMemory<uint32_t>(base, 0x780, 0xa0);
+    int plant_max_cnt = ReadMemory<uint32_t>(base, 0x780, 0xa4);
+    for (int i = 0; i < plant_max_cnt; ++i) {
+        uint32_t plant_ptr = plant_array + i * 0x14c;
+        WriteMemory<int>(0x1, plant_ptr + 0x50);
+        // wake up mushroom
+        WriteMemory<byte>(0x0, plant_ptr+0x143);
+        WriteMemory<int>(0x0f, plant_ptr + 0x24);
+    }
+}
 void PvZ::EasyCheat(bool on) {
     PlantWithoutSun(on);
     PlantFreely(on);
@@ -281,6 +310,7 @@ void PvZ::EasyCheat(bool on) {
     NoCoolDown(on);
     FullScreenZengGe(on);
     FullScreenWoGua(on);
+    FullScreenJalapeno(on);
     ChomperSwallowEverything(on);
     FumeshroomOneLine(on);
     KelpPullEverything(on);
