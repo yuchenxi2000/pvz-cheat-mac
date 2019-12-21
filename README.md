@@ -2,6 +2,8 @@
 
 植物大战僵尸Mac版修改器
 
+> 该修改器暂时没有UI，使用时在 main.cpp 里调函数然后编译运行吧（以 root 身份）
+
 ## 简介
 
 该修改器是对 https://github.com/zhoury18/PvZHelper-Mac 的扩展，主要是植物强化。
