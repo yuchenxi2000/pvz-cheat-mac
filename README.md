@@ -10,9 +10,17 @@
 
 因为是扩展，所以功能不完全，请配合 zhoury18/PvZHelper-Mac 使用。
 
+* 作弊
+
 在场地上添加子弹，曾哥全屏，窝瓜全屏，植物狂暴，大嘴花吃巨人，植物射玉米炮等植物强化，以及无视阳光种植，我是僵尸模式随意放置等。
 
-游戏版本 Plants vs. Zombies v1.0.40 (Mac)，反汇编工具 Hopper Disassembler
+* 补丁
+
+爆炸坚果在非保龄球模式死亡时爆炸，我是僵尸模式正常放置植物。
+
+## 实现
+
+游戏版本 Plants vs. Zombies v1.0.40 (Mac)，反汇编工具 Hopper Disassembler。使用 zhoury18/PvZHelper-Mac 里的内存读写工具，使用 asmjit/asmjit 作为汇编器。
 
 ## 你可以做什么
 
