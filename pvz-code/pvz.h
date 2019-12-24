@@ -7,6 +7,7 @@
 #include <array>
 #include "memory.h"
 #include "code.h"
+#include "patch.hpp"
 
 typedef uint8_t byte;
 
@@ -48,6 +49,7 @@ public:
     ~PvZ();
     
 public:
+    // cheat
     // 自由种植物
     void PlantFreely(bool on);
     // 自由放僵尸（我是僵尸模式）
@@ -138,6 +140,12 @@ public:
     void AllPlantsExplode();
     // 所有植物变成核菇并瞬间爆炸
     void AllPlantsExplode2();
+    
+    // patch
+    // 原版补丁：爆炸坚果死亡时爆炸
+    void RedNutExplode();
+    // 原版补丁：我是僵尸模式可以正常放置植物
+    void PlantInIZombieMode();
     
     // 标准开挂
     void EasyCheat(bool on);

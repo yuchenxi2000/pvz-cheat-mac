@@ -303,6 +303,58 @@ void PvZ::AllPlantsExplode2() {
         WriteMemory<int>(0x0f, plant_ptr + 0x24);
     }
 }
+void PvZ::RedNutExplode() {
+//    code.asm_init_codeInject();
+//    code.asm_add_byte(0x83); code.asm_add_byte(0xfa); code.asm_add_byte(0x40);
+//    code.asm_add_byte(0x7f); code.asm_add_byte(0x22);
+//    code.asm_add_byte(0x8b); code.asm_add_byte(0x45); code.asm_add_byte(0xc);
+//    code.asm_add_byte(0x8b); code.asm_add_byte(0x40); code.asm_add_byte(0x24);
+//    code.asm_add_byte(0x83); code.asm_add_byte(0xf8); code.asm_add_byte(0x31);
+//    code.asm_add_byte(0x75); code.asm_add_byte(0x17);
+//    code.asm_add_byte(0x8b); code.asm_add_byte(0x45); code.asm_add_byte(0xc);
+//    code.asm_add_byte(0xc7); code.asm_add_byte(0x80); code.asm_add_dword(0x24); code.asm_add_dword(0x2);
+//    code.asm_add_byte(0xc7); code.asm_add_byte(0x80); code.asm_add_dword(0x50); code.asm_add_dword(0x1);
+//    code.asm_code_inject(false, 0xd82cd, 13);
+    
+    code.asm_init_codeInject();
+    // cmp edx, 0x40  (edx: plant+0x40)  3
+    // jg end                            2
+    // mov eax, dword [ebp+0xc]          3
+    // mov eax, dword [eax+0x24]         3
+    // cmp eax, 0x31                     3
+    // jne tall_nut                      2
+    // mov eax, dword [ebp+0xc]          3
+    // mov dword [eax+0x24], 0x2         7
+    // mov dword [eax+0x50], 0x1         7
+    // tall-nut:
+    // mov eax, dword [ebp+0xc]          3
+    // mov eax, dword [eax+0x24]         3
+    // cmp eax, 0x17                     3
+    // jne end                           2
+    // mov eax, dword [ebp+0xc]          3
+    // mov dword [eax+0x24], 0x11        7
+    // end:
+    code.asm_cmp_exx(Reg::EDX, 0x40);
+    code.asm_jg_short(49); // end
+    code.asm_mov_eax_dword_ebp_add(0xc);
+    code.asm_mov_eax_dword_eax_add(0x24);
+    code.asm_cmp_exx(Reg::EAX, 0x31);
+    code.asm_jne_short(17); // tall_nut
+    code.asm_mov_eax_dword_ebp_add(0xc);
+    code.asm_mov_dword_ptr_exx_add(Reg::EAX, 0x24, 0x2);
+    code.asm_mov_dword_ptr_exx_add(Reg::EAX, 0x50, 0x1);
+    // tall_nut
+    code.asm_mov_eax_dword_ebp_add(0xc);
+    code.asm_mov_eax_dword_eax_add(0x24);
+    code.asm_cmp_exx(Reg::EAX, 0x17);
+    code.asm_jne_short(10); // end
+    code.asm_mov_eax_dword_ebp_add(0xc);
+    code.asm_mov_dword_ptr_exx_add(Reg::EAX, 0x24, 0x11);
+    // end
+    
+    code.asm_code_inject(true, 0xd82cd, 13);
+}
+
 void PvZ::EasyCheat(bool on) {
     PlantWithoutSun(on);
     PlantFreely(on);
@@ -323,6 +375,58 @@ void PvZ::EasyCheat(bool on) {
         InfiniteLawnMower(NORMAL);
     }
 }
+
+void PvZ::PlantInIZombieMode() {
+    using namespace asmjit::x86;
+    uint32_t patch_addr = (uint32_t)memory.Allocate(1024, VM_PROT_ALL);
+    /*
+     2a264:
+     jns patch
+     */
+    {
+        Patch patch(memory, 0x2a264);
+        auto& as = patch.as;
+        
+        as.jns(patch_addr);
+        
+        patch.patch();
+    }
+    /*
+     patch:
+     mov eax, dword [ebp+0x8]
+     mov eax, dword [eax+0x80]
+     mov dword [esp], eax
+     call is_game_mode_i_zombie_bb7a6
+     test al, al
+     je 2a2cf
+     mov eax, dword [ebp+0x8]
+     mov dword [esp], eax
+     call get_hold_card_id_117ec
+     cmp eax, 0x3b
+     jle 2a2cf // plant card
+     jmp 2a2a4 // zombie card
+     */
+    {
+        Patch patch(memory, patch_addr);
+        auto& as = patch.as;
+        
+        as.mov(eax, dword_ptr(ebp, 0x8));
+        as.mov(eax, dword_ptr(eax, 0x80));
+        as.mov(dword_ptr(esp), eax);
+        as.call(0xbb7a6);
+        as.test(al, al);
+        as.je(0x2a2cf);
+        as.mov(eax, dword_ptr(ebp, 0x8));
+        as.mov(dword_ptr(esp), eax);
+        as.call(0x117ec);
+        as.cmp(eax, 0x3b);
+        as.jle(0x2a2cf);
+        as.jmp(0x2a2a4);
+        
+        patch.patch();
+    }
+}
+
 // test
 void PvZ::WinterMelon() {
     // 示例：每行放50个冰瓜

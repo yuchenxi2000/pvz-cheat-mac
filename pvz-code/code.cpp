@@ -453,3 +453,110 @@ void Code::asm_put_coin(int row, int column, int type, int scene) {
     asm_mov_ptr_esp_add_exx(0x0, Reg::EAX);
     asm_call(0x28E02);
 }
+// modified
+void Code::asm_mov_eax_dword_ebp_add(uint8_t offset) {
+    asm_add_byte(0x8b);
+    asm_add_byte(0x45);
+    asm_add_byte(offset);
+}
+
+void Code::asm_mov_eax_dword_eax_add(uint8_t offset) {
+    asm_add_byte(0x8b);
+    asm_add_byte(0x40);
+    asm_add_byte(offset);
+}
+
+void Code::asm_cmp_exx(Reg reg, uint8_t value) {
+    uint8_t cmp_exx[] = {0xf8, 0x00, 0x00, 0xfa, 0x00, 0x00, 0x00};
+    asm_add_byte(0x83);
+    asm_add_byte(cmp_exx[static_cast<uint8_t>(reg)]);
+    asm_add_byte(value);
+}
+
+void Code::asm_jg_short(uint8_t offset) {
+    asm_add_byte(0x7f);
+    asm_add_byte(offset);
+}
+
+void Code::asm_jne_short(uint8_t offset) {
+    asm_add_byte(0x75);
+    asm_add_byte(offset);
+}
+
+void Code::asm_test_al_al() {
+    asm_add_byte(0x84);
+    asm_add_byte(0xc0);
+}
+
+void Code::asm_mov_dword_esp_add_eax(uint8_t offset) {
+    asm_add_byte(0x89); asm_add_byte(0x44); asm_add_byte(0x24);
+    asm_add_byte(offset);
+}
+
+void Code::patch_plant_in_i_zombie() {
+    /*
+     2a264:
+     jns patch
+     
+     patch:
+     mov eax, dword [ebp+0x8]
+     mov eax, dword [eax+0x80]
+     mov dword [esp], eax
+     call is_game_mode_i_zombie_bb7a6
+     test al, al
+     je 2a2cf
+     mov eax, dword [ebp+0x8]
+     mov dword [esp], eax
+     call get_hold_card_id_117ec
+     cmp eax, 0x3b
+     jle 2a2cf // plant card
+     jmp 2a2a4 // zombie card
+     */
+    uint32_t inject_code = (uint32_t)memory.Allocate(1024);
+    length = 0;
+    
+    memory.WriteMemory<uint8_t>(0x0f, {0x2a264});
+    memory.WriteMemory<uint8_t>(0x89, {0x2a264+1});
+    memory.WriteMemory<int>(inject_code - 0x2a264 - 6, {0x2a264+2});
+    
+    asm_mov_eax_dword_ebp_add(0x8);
+    // mov eax, [eax+0x80]
+    asm_add_byte(0x8b);
+    asm_add_byte(0x80);
+    asm_add_dword(0x80);
+    // mov eax, [eax+0x80] end
+    asm_mov_dword_esp_add_eax(0x0);
+    // call
+    code[length] = 0xe8;
+    (int&)code[length+1] = 0xbb7a6 - length - inject_code - 5;
+    length += 5;
+    // end call
+    asm_test_al_al();
+    // je
+    code[length] = 0x0f;
+    code[length+1] = 0x84;
+    (int&)code[length+2] = 0x2a2cf - length - inject_code - 6;
+    length += 6;
+    // end je
+    asm_mov_eax_dword_ebp_add(0x8);
+    asm_mov_dword_esp_add_eax(0x0);
+    // call
+    code[length] = 0xe8;
+    (int&)code[length+1] = 0x117ec - length - inject_code - 5;
+    length += 5;
+    // end call
+    asm_cmp_exx(Reg::EAX, 0x3b);
+    // jle
+    code[length] = 0x0f;
+    code[length+1] = 0x8e;
+    (int&)code[length+2] = 0x2a2cf - length - inject_code - 6;
+    length += 6;
+    // end jle
+    // jmp
+    code[length] = 0xe9;
+    (int&)code[length+1] = 0x2a2a4 - length - inject_code - 5;
+    length += 5;
+    // end jmp
+    
+    memory.Write(inject_code, length, code);
+}

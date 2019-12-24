@@ -27,6 +27,24 @@ public:
     
     ~Code();
     
+    // modified
+    void asm_mov_eax_dword_ebp_add(uint8_t offset);
+    
+    void asm_mov_eax_dword_eax_add(uint8_t offset);
+    
+    void asm_cmp_exx(Reg reg, uint8_t value);
+    
+    void asm_jg_short(uint8_t offset);
+    
+    void asm_jne_short(uint8_t offset);
+    
+    void asm_test_al_al();
+    
+    void asm_mov_dword_esp_add_eax(uint8_t offset);
+    
+    void patch_plant_in_i_zombie();
+    // end modified
+    
     void asm_init_codeInject();
     
     void asm_init_newThread();
