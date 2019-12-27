@@ -1,0 +1,76 @@
+0xf8a9e: (length=6)
+     jmp patch
+
+patch:
+     jle f96c6 // id not exist
+     
+     cmp eax, 0x38
+     je sun
+     cmp eax, 0x39
+     je diamond
+     cmp eax, 0x3a
+     je zombie
+     cmp eax, 0x3b
+     je cup
+     
+     cmp eax, 0x4a
+     jg f96c6 // id not exist
+     cmp eax, 0x34
+     jg not_plant
+     jmp f8aa4 // plant
+     not_plant:
+     cmp eax, 0x3b
+     jg f8aa4 // zombie
+     
+     mov eax, dword [ebp+0x8]
+     mov eax, dword [eax]
+     mov eax, dword [eax+0x7c0]
+     cmp eax, 0x14 // 宝石迷阵
+     je f8aa4
+     cmp eax, 0x18 // 宝石迷阵2
+     je f8aa4
+     jne f96c6 // id may crash game
+     
+     cup:
+     mov eax, dword [ebp+0x8]
+     mov eax, dword [eax+0x4]
+     mov eax, dword [eax+0x154]
+     mov dword [esp], eax
+     mov dword [esp+0x4], 0x2
+     mov dword [esp+0x8], 0x0
+     call a6164
+     jmp f96c6
+     sun:
+     mov eax, dword [ebp+0x8]
+     mov eax, dword [eax+0x4]
+     mov edx, dword [eax+0x5554]
+     lea edx, dword [edx+1000]
+     mov dword [eax+0x5554], edx
+     jmp f96c6
+     diamond:
+     mov eax, dword [ebp+0x8]
+     mov eax, dword [eax+0x4]
+     mov dword [esp], eax
+     mov dword [esp+0x4], 400
+     mov dword [esp+0x8], 300
+     mov dword [esp+0xc], 3
+     mov dword [esp+0x10], 3
+     call 28e02
+     jmp f96c6
+     zombie:
+     mov eax, dword [ebp+0x8]
+     mov eax, dword [eax]
+     mov eax, dword [eax+0x7c0]
+     cmp eax, 0x17
+     je f8aa4
+     mov dword [esp+0xc], 0
+     mov dword [esp+0x8], -2
+     mov dword [esp+0x4], 0xb
+     mov eax, dword [ebp+0x8]
+     mov eax, dword [eax+0x4]
+     mov eax, dword [eax+0x154]
+     mov dword [esp], eax
+     call ac672
+     jmp f96c6
+
+

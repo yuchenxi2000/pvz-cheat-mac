@@ -9,13 +9,20 @@ class Patch {
     asmjit::CodeHolder code;
     Memory& memory;
 public:
-    Patch(Memory& memory_writer, uint32_t addr) : memory(memory_writer), as(&code) {
+    Patch(Memory& memory_writer, uint32_t addr) : memory(memory_writer) {
         this->addr = addr;
         asmjit::CodeInfo codeinfo(asmjit::ArchInfo::kIdX86);
         codeinfo.setBaseAddress(addr);
         code.init(codeinfo);
+        as = new asmjit::x86::Assembler(&code);
     }
-    asmjit::x86::Assembler as;
+    ~Patch() {
+        delete as;
+    }
+    asmjit::x86::Assembler* as;
+    asmjit::x86::Assembler& get_assembler() {
+        return *as;
+    }
     void patch() {
         asmjit::CodeBuffer& buffer = code.textSection()->buffer();
         uint8_t* data = buffer.data();

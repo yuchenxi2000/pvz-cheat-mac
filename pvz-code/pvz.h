@@ -140,12 +140,20 @@ public:
     void AllPlantsExplode();
     // 所有植物变成核菇并瞬间爆炸
     void AllPlantsExplode2();
+    // 生成奖杯/钱袋
+    void GenGoldenCup();
     
     // patch
-    // 原版补丁：爆炸坚果死亡时爆炸
-    void RedNutExplode();
-    // 原版补丁：我是僵尸模式可以正常放置植物
-    void PlantInIZombieMode();
+    // 原版补丁：爆炸坚果死亡时爆炸，高坚果死亡时压死僵尸
+    void PatchRedNutExplode();
+    // 原版补丁：正确地放置植物、僵尸
+    void PatchUseCard();
+    // 原版补丁：点击卡片时不会崩溃（如奖杯、钻石等修改器修改出的卡片）
+    // 点击奖杯获得钱袋
+    // 点击阳光获得1000阳光
+    // 点击钻石获得钻石
+    // 点击潜水僵尸僵尸进家
+    void PatchClickCard();
     
     // 标准开挂
     void EasyCheat(bool on);

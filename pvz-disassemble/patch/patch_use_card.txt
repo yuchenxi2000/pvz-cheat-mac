@@ -1,0 +1,21 @@
+2a260: (length=6)
+jmp patch
+
+// 新开的内存
+patch:
+cmp dword [ebp+0x14], 0x0
+js 2a266       // 右键取消卡片选择
+mov eax, dword [ebp+0x8]
+mov dword [esp], eax
+call get_hold_card_id_117ec
+cmp eax, 0x34  // card_id <= 0x34: plant
+jle 2a2cf      // 放植物
+cmp eax, 0x3c
+jl 2a266       // 取消放置
+cmp eax, 0x4a
+jg 2a266       // 取消放置
+jmp 2a2a4      // 放僵尸
+
+
+
+

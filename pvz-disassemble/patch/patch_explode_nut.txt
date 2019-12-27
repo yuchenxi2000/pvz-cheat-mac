@@ -1,0 +1,26 @@
+d82cd:
+jmp patch
+
+patch:
+cmp edx, 0x40  (edx: plant+0x40，植物血量)
+jg end
+mov eax, dword [ebp+0xc]
+mov eax, dword [eax+0x24]
+cmp eax, 0x31 // 爆炸坚果ID
+jne tall_nut
+mov eax, dword [ebp+0xc]
+mov dword [eax+0x24], 0x2 // 改成樱桃
+mov dword [eax+0x50], 0x1 // 爆炸倒计时1
+tall-nut:
+mov eax, dword [ebp+0xc]
+mov eax, dword [eax+0x24]
+cmp eax, 0x17 // 高坚果ID
+jne end
+mov eax, dword [ebp+0xc]
+mov dword [eax+0x24], 0x11 // 改成窝瓜
+end:
+// 原来被替换的代码
+mov eax, dword [ebp+0xc]
+mov dword [eax+0xb4], 0x32
+// 跳回去
+jmp d82da

@@ -5,11 +5,26 @@ a835c  判断我是僵尸模式超线
 12192  在场地上放置植物/僵尸
 28e02  场地上生成物品
 22df6~2620f 鼠标响应函数
+3ceb6 灰烬生效函数
 
-0x12192 在场地上用卡
+2c3fa 点击函数
+f8a62 点击卡片
+ab354 水族馆确定胜利的函数
+
+d8028 僵尸啃食植物减血
+
+0x12192 ??
+
+2a0c2 put plant on lawn
+ac672 put zombie on lawn
+ac566 get zombie id from card id
 
 用卡、种植植物：
-0x2a256 种植植物
+int get_hold_card_id_117ec(PvZ*); 手里拿的卡片ID
+int get_row_from_scn_coord_1f7ac(PvZ*, int scn_x, int scn_y, int card_id); 根据屏幕坐标计算行
+int get_col_from_scn_coord_1f5c0(PvZ*, int scn_x, int scn_y, int card_id); 根据屏幕坐标计算列
+int can_plant_1e98e(PvZ*, int col, int row, int card_id); 可以种植返回0，其他值表明不能种植的原因
+use_card_on_lawn_2a256(PvZ*, int scn_x, int scn_y, int); 种植植物
 0x1c6f6 种植物时计算阳光是否足够，不够时红色闪烁提示
 0x1c6b4 判断卡片阳光是否足够，不够时设置卡片黑色
 
@@ -49,9 +64,29 @@ remove_lawn_mower_925c(Mower*) {
 activate_lawn_mower_8c00(Mower*);
 
 游戏模式：
-bool is_bowing_mode_bba86(PvZ*); 返回当前游戏是否是保龄球模式
-bool is_game_mode_slot_machine_bb616(PvZ*);  当前游戏模式slot machine
 bool is_main_menu_ba7f0(PvZ*); 返回当前游戏是否在主界面
+bool is_1_1_ba818(PvZ*);
+bool survival_ba850(PvZ*);
+bool puzzle_ba886(PvZ*);
+int previous_level_ba8e2(PvZ*);
+bool is_vase_mode_ba8f4(PvZ*);
+bool is_adventure_1_1_ba96a(PvZ*);
+void null_ba9be();
+void null_ba9c6();
+bool n_adv_sur_puzz_bb54e(PvZ*); 不是adventure, survival, puzzle
+bool fill_in_plant_bb5ba(PvZ*);
+bool is_zomboss_mode_bb656(PvZ*);
+bool is_game_mode_squirrel_bb766(PvZ*);
+bool is_game_mode_i_zombie_bb7a6(PvZ*);
+bool is_game_mode_slot_machine_bb616(PvZ*);  当前游戏模式slot machine
+bool is_game_mode_hidden_can_you_dig_it_bb866(PvZ*);
+bool is_game_mode_bowing_bba86(PvZ*); 返回当前游戏是否是保龄球模式
+bool whack_mode_bb932(PvZ*);
+bool little_zombie_mode_bb9b0(PvZ*);
+bool stormy_mode_bba2e(PvZ*);
+bool bungee_blitz_mode_bbaac(PvZ*);
+bool adventure_10_20_30_bbb2a(PvZ*);
+
 
 植物攻击类型：
 int get_plant_fight_type_347ac(Plant*, bool); 灰烬，有攻击距离，子弹追踪，...
@@ -118,10 +153,21 @@ void update_griditem_9352(GridItem*);
 
 void update_slot_f82ba(Slot*);
 
+植物属性：
+bool can_produce_sun_3415a(Plant* plant) {
+    return plant->ID == 1 && plant->ID == 29 && plant->ID == 9;
+}
+
 植物战斗：
 void update_plant_42c6c(Plant*); 对场上植物，貌似仅在战斗界面做操作，先后调0x4287c（作出摇动、攻击），0x38e7a，0x3985e
 void plant_fight_4287c(Plant*); 植物做攻击，会射击的调0x416cc，窝瓜调0x4033c，三叶草调0x3d672
 0x38e7a: 貌似是眨眼动作
+
+辣椒伤害函数：
+3cca6
+
+杨桃一次射5颗子弹：
+34e58
 
 植物射击：
 Plant* plant_shoot_416cc(Plant*); 会射击的植物每帧由plant_fight_4287c调用，switch每个ID，根据植物指针+0x90的值判断射击时调get_plant_target_zombie_3e67e得到瞄准的僵尸，然后调plant_shoot_zombie_40be0射击
@@ -142,7 +188,7 @@ void plant_shoot_zombie_40be0(Plant*, Zombie*, int plant_ypos, bool is_cannon); 
 40a28 群伤攻击，由40be0在ID为曾哥、大喷、地刺、钢地刺时调用，可改全屏曾
 
 添加子弹：
-Bullet* put_bullet_2ca3a(PvZ*, int x, int y, int, int shadow_row, int bullet_type);
+Bullet* put_bullet_2ca3a(PvZ*, int x, int y, int, int row, int bullet_type); 该函数不会设子弹速度。
 
 中弹判定，hitbox：
 struct hitbox {

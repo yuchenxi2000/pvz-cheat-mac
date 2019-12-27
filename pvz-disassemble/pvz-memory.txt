@@ -43,7 +43,9 @@ PvZ Mac v1.0.40 memory address
              |    |
              |    |-4c---max HP
              |    |
-             |    |-50---can shoot
+             |    |-48---can shoot
+             |    |
+             |    |-50---灰烬生效倒计时
              |    |
              |    |-5c---prepare time // 食人花，土豆，玉米炮
              |    |
@@ -138,4 +140,12 @@ PvZ Mac v1.0.40 memory address
              |-5594---wave interval
              |
              |-5598---huge wave countdown
+             |
+             |-57a4---(bool)统计是否使用豌豆类
+             |
+             |-57a5---(bool)统计是否使用投掷类
+             |
+             |-57b0---(bool)和统计是否使用蘑菇类有关？？
+             |
+             |-57b1---(bool)和统计是否使用蘑菇类有关？？
              |

@@ -34,8 +34,16 @@ pid_t Memory::Attach(const std::string &procName) {
     return pid;
 }
 
+void Memory::AttachSelf() {
+    pmach_port = mach_task_self();
+}
+
 void Memory::Detach() {
     Close();
+}
+
+uintptr_t Memory::LoadAddress() {
+    return segments[0].address;
 }
 
 kern_return_t Memory::Read(uintptr_t address, size_t size, void *buffer) {

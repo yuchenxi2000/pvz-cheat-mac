@@ -28,7 +28,11 @@ public:
     
     pid_t Attach(const std::string &procName);
     
+    void AttachSelf();
+    
     void Detach();
+    
+    uintptr_t LoadAddress();
     
     kern_return_t Read(uintptr_t address, size_t size, void *buffer);
     
@@ -105,7 +109,7 @@ public:
                 Write(offset + *it, sizeof(buff), &buff);
     }
 
-private:
+//private:
     int Open();
     
     void Close();
