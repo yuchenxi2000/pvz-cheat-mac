@@ -1,0 +1,25 @@
+#define BACK 105263
+
+105261:
+jmp p
+
+p:
+jne other
+mov dword [ebp-0x1c], 0x14
+other:
+mov eax, dword [ebp+0x8]
+mov eax, dword [eax+0x5c]
+cmp eax, 0x7
+jne BACK
+call _random
+cmp eax, P1
+jl BACK
+cmp eax, P2
+jl FLY
+mov eax, dword [ebp+0xc]
+mov byte [eax+0xb8], 0x1
+jmp BACK
+FLY:
+mov eax, dword [ebp+0xc]
+mov byte [eax+0xb9], 0x1
+jmp BACK

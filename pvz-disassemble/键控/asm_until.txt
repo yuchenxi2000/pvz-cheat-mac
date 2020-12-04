@@ -1,0 +1,7 @@
+bool asm_until(PvZ*, int gt, int* wait_time);
+
+curtime = get curtime (edx)
+sub curtime, global_refresh_point
+mov eax, gt
+sub eax, curtime
+call delay(pvz, eax, wait_time)

@@ -1,0 +1,53 @@
+1b:
+ecd2b:
+jmp patch
+
+patch:
+jne eced7
+
+call d0b08
+jmp ecd3c
+
+
+1f:
+ecedb:
+jmp patch
+
+patch:
+jne ed0a3
+
+call d0b08
+jmp eceec
+
+
+1e:
+ed43b:
+jmp patch
+
+patch:
+jne ed5e6
+
+call d0b08
+jmp ed44c
+
+
+1d:
+ed287:
+jmp patch
+
+patch:
+jne ed437
+
+call d0b08
+jmp ed298
+
+
+1c:
+ed0ac:
+jmp patch
+
+patch:
+jne ed283
+call d0b08
+jmp ed0bd
+

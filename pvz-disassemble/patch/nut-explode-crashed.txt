@@ -1,0 +1,14 @@
+3d644:
+jmp patch
+
+patch:
+mov eax, dword [ebp+0x8]
+mov edx, dword [eax+0x24]
+cmp edx, 0x31
+jne other
+mov byte [eax+0x142], 0x0
+mov dword [eax+0x24], 0x2
+mov dword [eax+0x50], 0x1
+other:
+mov eax, dword [eax]
+jmp 3d649

@@ -7,17 +7,23 @@ a835c  判断我是僵尸模式超线
 22df6~2620f 鼠标响应函数
 3ceb6 灰烬生效函数
 
-2c3fa 点击函数
+void click_scene_in_ui_3_2c3fa(PvZ*, int x, int y, int click_key); 点击函数 click_key: 左键 1 右键 -1 中键 3
 f8a62 点击卡片
 ab354 水族馆确定胜利的函数
 
 d8028 僵尸啃食植物减血
 
+d8dea 僵尸减速
+
 0x12192 ??
 
-2a0c2 put plant on lawn
+2a0c2_set_plant(PvZ*, int col, int row, int id, int imitator_id);
 ac672 put zombie on lawn
 ac566 get zombie id from card id
+
+2cee2
+2ca86 刷怪
+ea65c 设置僵尸饰品、血量
 
 用卡、种植植物：
 int get_hold_card_id_117ec(PvZ*); 手里拿的卡片ID
@@ -105,8 +111,8 @@ bool get_next_griditem_1c786(PvZ*, Item**);
 游戏战斗循环：
 void game_loop_11065c(PvZ*); 图鉴界面的游戏循环
 void game_loop_izombie_acef0(PvZ*); 我是僵尸模式游戏主循环
-void game_loop_1d39e(PvZ*); 战斗界面（非我是僵尸模式）的游戏循环（GameUI==3），依次遍历植物、僵尸、...
-void game_loop_1d39e(PvZ* pvz) {
+void game_loop_1d35e(PvZ*); 战斗界面（非我是僵尸模式）的游戏循环（GameUI==3），依次遍历植物、僵尸、...
+void game_loop_1d35e(PvZ* pvz) {
     Plant** plant;
     while (get_next_plant_18ef8(pvz, plant) != 0) {
         update_plant_42c6c(*plant);
@@ -153,9 +159,20 @@ void update_griditem_9352(GridItem*);
 
 void update_slot_f82ba(Slot*);
 
+僵尸状态：
+bool zombie_can_move_d0ef2(Zombie*); 判断是否可以移动（黄油、冰冻结）
+
+植物状态：
+void set_ice_countdown_358e0(Plant*); 寒冰菇不在睡觉、不在生效中时设置生效倒计时
+
+bool is_coffee_34218(int id); 返回是否是咖啡豆
+
 植物属性：
 bool can_produce_sun_3415a(Plant* plant) {
-    return plant->ID == 1 && plant->ID == 29 && plant->ID == 9;
+    return plant->ID == 1 || plant->ID == 29 || plant->ID == 9;
+}
+bool water_plant_3df1e(int id) {
+    return id == 0x10 || id == 0x13 || id == 0x18 || id == 0x2b;
 }
 
 植物战斗：

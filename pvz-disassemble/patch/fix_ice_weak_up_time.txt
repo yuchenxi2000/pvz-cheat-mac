@@ -1,0 +1,11 @@
+3d4b7:
+// eax = mushroom
+mov edx, dword [ebp+0x8] // coffee
+cmp eax, edx
+jl rectify // mushroom < coffee
+mov dword [eax+0x130], 0x64
+jmp 3d4c1
+
+rectify:
+mov dword [eax+0x130], 0x63
+jmp 3d4c1

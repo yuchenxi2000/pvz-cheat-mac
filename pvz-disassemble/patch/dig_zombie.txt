@@ -1,0 +1,18 @@
+32 挖掘
+33 旋转
+34 ??
+35 提前钻出
+36 眩晕
+37 向右走
+38 向左走
+
+d8c3a:
+jmp patch
+
+patch:
+call _random
+cmp eax, P
+jge d8bda
+mov eax, dword [ebp+0x8]
+mov dword [eax+0x28], 0x25
+jmp d8c44

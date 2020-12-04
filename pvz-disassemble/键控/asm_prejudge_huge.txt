@@ -1,0 +1,66 @@
+psedo-code-prejudge, normal wave & huge wave
+init after asm_delay
+
+bool asm_prejudge(PvZ*, int gt, int wave, int* end_time);
+
+push ebp
+mov ebp, esp
+sub esp, 0x30
+
+curwave = get current wave
+
+if curwave = wave goto eq
+if curwave < wave goto le
+if curwave = wave - 1 goto eq_minus_one
+goto prejudge_true
+
+le:
+mov eax, 0x0
+goto prejudge_end
+
+eq_minus_one:
+// whether wave is huge wave
+if wave == 10 goto huge_wave
+if wave == 20 goto huge_wave
+// normal wave
+assign cnt_down = refresh_time[wave-1]
+cur_refresh = get refresh countdown
+if cur_refresh > cnt_down goto le // untilcountdown
+jmp prejudge_wait
+
+huge_wave:
+cur_refresh = get refresh countdown
+if cur_refresh > 5 goto le
+cur_hugewave = get hugewave countdown
+if cur_hugewave > 750 goto le
+if cur_refresh == 4 goto l45
+if cur_refresh == 5 goto l45
+cur_refresh = cur_hugewave + 745
+jmp prejudge_wait
+
+l45:
+cur_refresh = cur_hugewave
+
+prejudge_wait:
+clock = get current game time
+global_refresh_point = clock + cur_refresh
+wait_time = gt + cur_refresh
+call asm_delay(wait_time, end_time)
+jmp prejudge_end
+
+eq:
+cur_time = get current game time
+cur_refresh = get refresh countdown
+init_cntdown = get wave interval
+global_refresh_point = cur_time - init_cntdown + cur_refresh
+wait_time = gt - init_cntdown + cur_refresh
+call asm_delay(wait_time, end_time)
+jmp prejudge_end
+
+prejudge_true:
+mov eax, 0x1
+
+prejudge_end:
+add esp, 0x30
+leave
+ret

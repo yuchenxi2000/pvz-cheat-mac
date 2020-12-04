@@ -1,0 +1,16 @@
+9cc80(Item*, int x, int y, int, int);
+雨中种植物生成植物卡
+Item* alloc_item_3299c(Item* item_array);
+
+
+02816000
+16cfbc00
+0
+0
+0
+0
+1
+-1
+00061a80
+
+352f2
